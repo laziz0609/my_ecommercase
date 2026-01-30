@@ -18,41 +18,58 @@ class Cli:
         
     def run(self) -> None:
         while True:
-            self.print_login_menu()
-            
-            choice = input("> ")
-            if choice == "1":
-                print("-------------------Products-------------------\n")
+            if self.current_user == None:
+                self.print_login_menu()
                 
-            elif choice == "2":
-                self.login()
-                
-            elif choice == "3":
-                self.register()
+                choice = input(colored("> ", "blue"))
+                if choice == "1":
+                    print("-------------------Products-------------------\n")
                     
-            elif choice == "0":
-                cprint("xayr", "green")
-                sys.exit()
+                elif choice == "2":
+                    self.login()
+                    
+                elif choice == "3":
+                    self.register()
+                        
+                elif choice == "0":
+                    self.quit()
 
+                else:
+                    cprint("bunday menu mavjud emas\n", "yellow")
+                
             else:
-                print("bunday menu mavjud emas")
-            # else:
-            #     self.print_logout_menu()
-            #     choice = input("> ")
+                self.print_logout_menu()
+                choice = input(colored("> ", "blue"))
                 
-            #     if choice == "1":
-            #         print("-------------------Products-------------------\n")
+                if choice == "1":
+                    print("-------------------Products-------------------\n")
                 
-            #     elif choice == "2":
+                elif choice == "2":
+                    pass
+                
+                elif choice == "3":
+                    cprint("logout", "yellow")
+                    self.current_user = None
                     
-       
-               
+                elif choice == "0":
+                    self.quit()
+                
+                else:
+                    cprint("bunday menu mavjud emas\n", "yellow")
+                
+                    
     def login(self) -> None:
         while True:
             username = input("username: ")
             password = input("password: ")
-            self.userservice.login()
-    
+            checker = self.userservice.login(username, password)
+            if checker != None:
+                cprint("siz login qilindingiz", "green")
+                self.current_user = checker
+                break
+            else:
+                cprint("username yoki password xato !!!", "red")
+
               
     def register(self) -> None:
         while True:
@@ -108,9 +125,17 @@ class Cli:
     def print_logout_menu(self) -> None:
         menu = "-------------------Menu-------------------\n"
         menu += "1. Products\n"
-        menu += "2. Logaut\n"
+        menu += "2. My Cart\n"
+        menu += "3. Logout\n"
         menu += "0. Quit\n" 
         print(menu)      
+    
+    
+    def quit(self):
+        cprint("ko'rishguncha", "blue")
+        sys.exit()
+       
+        
         
     @staticmethod  
     def validate_username(username: str) -> bool:

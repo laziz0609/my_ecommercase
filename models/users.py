@@ -17,7 +17,7 @@ class User:
             self.id = str(uuid4())
                 
                 
-    def return_dict(self):
+    def return_dict(self) -> dict[str, str]:
         result = {
             "id": self.id,
             "username": self.username,
@@ -26,4 +26,16 @@ class User:
             "last_name": self.last_name
         }
         return result
+    
+    
+    @classmethod
+    def cast_user(cls, data: dict):
+        return cls(
+                id=data["id"],
+                username=data["username"],
+                password=data["password"],
+                first_name=data["first_name"],
+                last_name=["last_name"],
+            )
+        
         
