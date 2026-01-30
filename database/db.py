@@ -22,12 +22,12 @@ class DB:
     
     def is_username_in_database(self, username: str) -> bool:
         data = self.read_db_json()
-            
+
         for user in data["users"]:
             if user["username"] == username:
                 return False
                 
-            return True
+        return True
         
     
     def add_user(self, user: User) -> None:

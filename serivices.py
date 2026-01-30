@@ -29,3 +29,10 @@ class UserService:
     
     def is_username_in_database(self, username: str) -> bool:
         return db.is_username_in_database(username)
+    
+    
+    
+    
+# class ProductService:
+    
+#     def products_name(self) -> list[] 
