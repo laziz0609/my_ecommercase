@@ -4,7 +4,8 @@ from getpass import getpass
 from termcolor import colored, cprint
 
 
-from serivices import UserService#, ProductService
+from serivices import UserService, ProductService, Cart
+from models.products import Product
 
 
 
@@ -14,8 +15,8 @@ class Cli:
     def __init__(self):
         self.current_user = None
         self.userservice = UserService()
-        #self.productservice = ProductService()
-        
+        self.productservice = ProductService()
+        self.cart = Cart()
         
     def run(self) -> None:
         while True:
@@ -24,8 +25,23 @@ class Cli:
                 
                 choice = input(colored("> ", "blue"))
                 if choice == "1":
-                    print("-------------------Products-------------------\n")
-                    # self.show_products()
+                    while True:
+                        print("-------------------Products-------------------\n")
+                        products = self.show_products()
+                        self.product_menu()
+                        
+                        choice = input(colored("> ", "blue"))
+                        if choice == "1":
+                            id = self.tottal_info_product(products)
+        
+                        elif choice == "2":
+                            self.search_by_name_product()
+                        
+                        elif choice == "0":
+                            break
+                        
+                        else:
+                            print("bunday emnu mavjud emas\n", "yellow")
                     
                 elif choice == "2":
                     self.login()
@@ -44,8 +60,43 @@ class Cli:
                 choice = input(colored("> ", "blue"))
                 
                 if choice == "1":
+                    
                     print("-------------------Products-------------------\n")
-                
+                    products = self.show_products()
+                    while True:
+                        self.product_menu()
+                        
+                        choice = input(colored("> ", "blue"))
+                        if choice == "1":
+                            id = self.tottal_info_product(products)
+                            
+                            while True:
+                                cprint("Savatchaga qo'shish: ", "blue", end = "")
+                                print("(", end="")
+                                cprint("1. ha", "light_cyan", end = "")
+                                print(" | ", end="")
+                                cprint("other buttons exit", "light_magenta", end = "")
+                                cprint(" )")
+                                
+                                buy_or_no = input(colored("> ", "blue"))
+                                
+                                if buy_or_no == "1":
+                                    self.cart.add_product_to_cart(self.current_user, id)
+                                    cprint("maxsulot savatchaga qo'shild\ni", "green")
+                                    
+                                else:
+                                    break
+        
+                        elif choice == "2":
+                            self.search_by_name_product()
+                        
+                        elif choice == "0":
+                            break
+                        
+                        else:
+                            print("bunday emnu mavjud emas\n", "yellow")
+                        
+                    
                 elif choice == "2":
                     pass
                 
@@ -60,9 +111,52 @@ class Cli:
                     cprint("bunday menu mavjud emas\n", "yellow")
                 
     
-    # def show_products(self) -> None:
-    #     data = self.productservice.products_name()
+    def print_product_info(product: Product) -> int:
+        info = product.category + "\n"
+        info += f"{product.id}. {product.name}\n"
+        info += f"narxi = {product.price}, chegirma = {product.sale}%, umumiy narx = {product.price - (product.price * product.sale)}\n"
+        info += product.description + "\n"
         
+        return product.id
+    
+    
+    def tottal_info_product(self, products: list[Product]) -> int:
+        choice = int(input(colored("product id raqamini tanlang:  ", "blue")))
+        print()
+            
+        product = ""
+        
+        for item in products:
+            if choice == item.id:
+                product = item
+                
+        if product:
+            info = product.category + "\n"
+            info += f"{product.id}. {product.name}\n"
+            info += f"narxi = {product.price}, chegirma = {product.sale}%, chegirmadagi narx = {product.price - (product.price * product.sale / 100)}\n"
+            info += product.description + "\n"
+            print(info)
+            print()
+            
+            return product.id
+        
+        else:
+            print("bunday id ga ega product mavjud emas")
+        
+    
+    def product_menu(self) -> None:
+        print("1. mahsulot id raqami orqali ko'rish")
+        print("2. qidirish")
+        print("0. chiqish")
+    
+    
+    def show_products(self) -> list[Product]:
+        products = self.productservice.products_name()
+        for product in products:
+            print(f"{product.id}. {product.name}")
+            
+        print()
+        return products        
     
                  
     def login(self) -> None:

@@ -19,6 +19,11 @@ class DB:
         with open(self.file_name, "w") as file:
             file.write(json.dumps(data, indent=4))
     
+   
+    def get_all_products(self) -> list[dict[str, int | str]]:
+       data = self.read_db_json()
+       return data["products"]
+   
     
     def is_username_in_database(self, username: str) -> bool:
         data = self.read_db_json()

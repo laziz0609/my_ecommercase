@@ -8,8 +8,17 @@
             "last_name": "mirkomilov"
         }
     ],
-    "carts": [],
-    "cart_items": [],
+    "carts": [
+        {
+            "user_id": "acd3c944-de54-4437-a458-b651b89ea0d7",
+            "cart":[
+                {
+                    "product_id": 6,
+                    "quantity": 2
+                }
+            ]
+        }
+    ],
     "oders": [],
     "order_items": [],
     "products": [
